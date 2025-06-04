@@ -1,0 +1,9 @@
+fastapi~=0.111
+uvicorn[standard]
+pymupdf
+pytesseract
+sentence-transformers
+faiss-cpu
+python-multipart      # pour l'upload de fichiers
+langchain-community   # ou llama-index>=0.11
+openai                # seulement si tu utilises l'API OpenAI
