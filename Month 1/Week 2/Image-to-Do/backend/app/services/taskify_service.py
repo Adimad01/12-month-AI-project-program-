@@ -1,20 +1,24 @@
-from transformers import T5ForConditionalGeneration, T5Tokenizer
-import json, torch, os, functools
-from fastapi import APIRouter
-from pydantic import BaseModel
+# app/services/taskify_service.py
 
-from ..services.taskify_service import extract_tasks 
-router = APIRouter(prefix="/taskify", tags=["Taskify"])
+import re
+from typing import List
 
-tokenizer = T5Tokenizer.from_pretrained("t5-small")
-model     = T5ForConditionalGeneration.from_pretrained(
-    os.getenv("TASKIFY_MODEL", "your‑fine‑tuned‑model")
-).eval()
+def extract_tasks(text: str) -> List[str]:
+    """
+    Extracts tasks from given text. Each task is assumed to start with
+    a bullet point, number, or a clear separator.
 
-def extract_tasks(lines):
-    prompt = "extract todos as json:\n" + "\n".join(lines)
-    ids = tokenizer(prompt, return_tensors="pt").input_ids
-    with torch.no_grad():
-        outputs = model.generate(ids, max_length=256)
-    raw_json = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return json.loads(raw_json)
+    Args:
+        text (str): Text containing potential tasks.
+
+    Returns:
+        List[str]: List of extracted tasks.
+    """
+    # Exemple simple : extraction basée sur des points ou des tirets comme marqueurs
+    task_pattern = re.compile(r"[\*\-\•]\s+(.+)")
+    tasks = task_pattern.findall(text)
+
+    # Supprime les espaces inutiles autour des tâches
+    tasks = [task.strip() for task in tasks if task.strip()]
+
+    return tasks

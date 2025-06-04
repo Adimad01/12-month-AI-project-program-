@@ -1,9 +1,9 @@
-from fastapi import APIRouter, UploadFile, File
-from ..services.ocr_service import run_ocr
+from fastapi import APIRouter, File, UploadFile
+from app.services.ocr_service import run_ocr
 
-router = APIRouter(prefix="/ocr", tags=["OCR"])
+router = APIRouter()
 
-@router.post("")
+@router.post("/ocr")
 async def ocr_endpoint(img: UploadFile = File(...)):
-    text_lines = await run_ocr(img)
-    return {"text": text_lines}
+    text = await run_ocr(img)
+    return {"lines": text.split("\n")}
