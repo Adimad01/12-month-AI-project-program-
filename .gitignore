@@ -1,0 +1,18 @@
+# === Environnements et dépendances ===
+.venv/
+node_modules/
+
+# === Artéfacts volumineux ou générés ===
+*.dylib
+*.so
+*.bin
+*.ckpt
+*.pt
+*.pth
+models/
+data/
+checkpoints/
+
+# Divers
+__pycache__/
+.DS_Store
